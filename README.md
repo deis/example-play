@@ -1,6 +1,6 @@
 # Play Quick Start Guide
 
-This guide will walk you through deploying a Python application on Deis.
+This guide will walk you through deploying a Play application on Deis.
 
 ## Prerequisites
 
@@ -34,7 +34,7 @@ If you're deploying the example application, it already conforms to these requir
 
 #### 1. Use Play Dependencies to manage dependencies
 
-Play requires that you explicitly declare your dependencies using a [dependencies.yml](http://www.playframework.com/documentation/1.2.1/dependency) file. Here is a very basic example:
+Play requires that you explicitly declare your dependencies using a [conf/dependencies.yml](http://www.playframework.com/documentation/1.2.1/dependency) file. Here is a very basic example:
 
 	# Application dependencies
 	
@@ -61,9 +61,9 @@ Note: You can test locally using `play run`.
 
 Deis relies on a [Foreman](http://ddollar.github.com/foreman/) `Procfile` that lives in the root of your repository.  This is where you define the command(s) used to run your application.  Here is an example `Procfile`:
 
-	web:    play run --http.port=$PORT $PLAY_OPTS
+	web: play "run $PORT" $PLAY_OPTS
 
-This tells Deis to run `web` workers using the command `play run --http.port=$PORT $PLAY_OPTS`. You can test this locally by running `foreman start`.
+This tells Deis to run `web` workers using the command `play "run $PORT" $PLAY_OPTS`. You can test this locally by running `foreman start`.
 
 	13:27:11 web.1  | started with pid 41249
 	13:27:14 web.1  | [info] Loading project definition from /Users/bengrunfeld/Desktop/OpDemand/repos/example-play/exampleApp/project
@@ -99,8 +99,15 @@ If an ID is not provided, one will be auto-generated for you.
 Use `git push deis master` to deploy your application.
 
 	$ git push deis master
-	<show code>
-	
+	Counting objects: 40, done.
+	Delta compression using up to 4 threads.
+	Compressing objects: 100% (32/32), done.
+	Writing objects: 100% (40/40), 40.64 KiB, done.
+	Total 40 (delta 4), reused 0 (delta 0)
+	       Play 2.x - Java app detected
+	-----> Installing OpenJDK 1.6...done
+	-----> Building app with sbt
+	-----> Running: sbt clean compile stage			
 Once your application has been deployed, use `deis open` to view it in a browser. To find out more info about your application, use `deis info`.
 
 ## Scale your Application

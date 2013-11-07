@@ -61,9 +61,9 @@ Note: You can test locally using `play run`.
 
 Deis relies on a [Foreman](http://ddollar.github.com/foreman/) `Procfile` that lives in the root of your repository.  This is where you define the command(s) used to run your application.  Here is an example `Procfile`:
 
-	web: play "run $PORT" $PLAY_OPTS
+	web: target/universal/stage/bin/exampleapp -Dhttp.port=$PORT
 
-This tells Deis to run `web` workers using the command `play "run $PORT" $PLAY_OPTS`. You can test this locally by running `foreman start`.
+This tells Deis to run `web` workers using the command `target/universal/stage/bin/exampleapp -Dhttp.port=$PORT`. You can test this locally by running `foreman start`.
 
 	13:27:11 web.1  | started with pid 41249
 	13:27:14 web.1  | [info] Loading project definition from /Users/bengrunfeld/Desktop/OpDemand/repos/example-play/exampleApp/project
@@ -115,7 +115,20 @@ Once your application has been deployed, use `deis open` to view it in a browser
 To scale your application's [Docker](http://docker.io) containers, use `deis scale` and specify the number of containers for each process type defined in your application's `Procfile`. For example, `deis scale web=8`.
 
 	$ deis scale web=8
-	<show code>
+	Scaling containers... but first, coffee!
+	done in 18s
+	
+	=== <appName> Containers
+
+	--- web: `target/universal/stage/bin/exampleapp -Dhttp.port=$PORT`
+	web.1 up 2013-11-06T23:24:54.875Z (dev-runtime-1)
+	web.2 up 2013-11-06T23:27:46.850Z (dev-runtime-1)
+	web.3 up 2013-11-06T23:27:46.867Z (dev-runtime-1)
+	web.4 up 2013-11-06T23:27:46.884Z (dev-runtime-1)
+	web.5 up 2013-11-06T23:27:46.902Z (dev-runtime-1)
+	web.6 up 2013-11-06T23:27:46.922Z (dev-runtime-1)
+	web.7 up 2013-11-06T23:27:46.942Z (dev-runtime-1)
+	web.8 up 2013-11-06T23:27:46.964Z (dev-runtime-1)
 
 
 ## Configure your Application
@@ -133,14 +146,36 @@ Deis applications are configured using environment variables. The example applic
 `deis config:set` is also how you connect your application to backing services like databases, queues and caches. You can use `deis run` to execute one-off commands against your application for things like database administration, initial application setup and inspecting your container environment.
 
 	$ deis run ls -la
-	<show code>
+	total 80
+	drwxr-xr-x 13 root root 4096 Nov  6 23:24 .
+	drwxr-xr-x 57 root root 4096 Nov  6 23:27 ..
+	-rw-r--r--  1 root root  141 Nov  6 23:13 .gitignore
+	drwxr-xr-x  3 root root 4096 Nov  6 23:13 .ivy2
+	drwxr-xr-x  6 root root 4096 Nov  6 23:13 .jdk
+	drwxr-xr-x  2 root root 4096 Nov  6 23:24 .profile.d
+	-rw-r--r--  1 root root  252 Nov  6 23:24 .release
+	drwxr-xr-x  4 root root 4096 Nov  6 23:24 .sbt_home
+	drwxr-xr-x  2 root root 4096 Nov  6 23:17 .settings
+	-rw-r--r--  1 root root   61 Nov  6 23:13 Procfile
+	-rw-r--r--  1 root root 7373 Nov  6 23:13 README.md
+	drwxr-xr-x  4 root root 4096 Nov  6 23:13 app
+	-rw-r--r--  1 root root  149 Nov  6 23:13 build.sbt
+	drwxr-xr-x  2 root root 4096 Nov  6 23:13 conf
+	drwxr-xr-x  4 root root 4096 Nov  6 23:24 project
+	drwxr-xr-x  5 root root 4096 Nov  6 23:13 public
+	-rw-r--r--  1 root root   25 Nov  6 23:13 system.properties
+	drwxr-xr-x  3 root root 4096 Nov  6 23:24 target
+	drwxr-xr-x  2 root root 4096 Nov  6 23:13 test
 	
 ## Troubleshoot your Application
 
 To view your application's log output, including any errors or stack traces, use `deis logs`.
 
     $ deis logs
-    <show output>
+	Nov  6 23:25:09 ip-172-31-11-82 rental-yearling[web.1]: Picked up JAVA_TOOL_OPTIONS:  -Djava.rmi.server.useCodebaseOnly=true
+	Nov  6 23:25:09 ip-172-31-11-82 rental-yearling[web.1]: Play server process ID is 13
+	Nov  6 23:25:11 ip-172-31-11-82 rental-yearling[web.1]: [#033[37minfo#033[0m] play - Application started (Prod)
+	Nov  6 23:25:11 ip-172-31-11-82 rental-yearling[web.1]: [#033[37minfo#033[0m] play - Listening for HTTP on /0:0:0:0:0:0:0:0:10151
 
 ## Additional Resources
 
